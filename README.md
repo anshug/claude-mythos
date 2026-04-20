@@ -236,6 +236,24 @@ If this helped you:
 
 ---
 
+## ⚖️ License
+
+This work is licensed under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). See [`LICENSE`](./LICENSE) for the full text.
+
+You are free to use, share, and adapt this framework for any purpose, including commercial use, provided you give appropriate credit.
+
+**Suggested attribution:**
+
+> Adapted from [claude-mythos](https://github.com/anshug/claude-mythos) by Anshu Gupta, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+For inline use in a prompt file, a single-line credit is enough:
+
+    # Adapted from claude-mythos (https://github.com/anshug/claude-mythos) by Anshu Gupta, CC BY 4.0
+
+No endorsement implied. Use of this framework does not constitute endorsement by Anshu Gupta, Fixin Security, or Tejas Cyber Network of any product, service, or implementation.
+
+---
+
 ## ⚖️ Disclaimer
 
 This project is for:
