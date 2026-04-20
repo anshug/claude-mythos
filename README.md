@@ -209,12 +209,14 @@ This framework:
 
 ## 🤝 Contributing
 
-Contributions welcome from:
+Contributions welcome from.
 - Security researchers  
 - Red teamers  
 - AI security engineers  
 
 Open an issue or PR.
+
+See CONTRIBUTING.md for the bar, ethics, and license.
 
 ---
 
