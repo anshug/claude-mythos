@@ -1,0 +1,7 @@
+{"phase":"RECON","files_scanned":15,"candidates":7,"findings_added":0,"dropped":0,"elapsed_ms":300000}
+{"phase":"HUNTER","files_scanned":24,"candidates":14,"findings_added":8,"dropped":4,"elapsed_ms":900000}
+{"phase":"SECRETS_SUPPLY_CHAIN","files_scanned":29,"candidates":1,"findings_added":0,"dropped":1,"elapsed_ms":120000}
+{"phase":"AI_SECURITY","files_scanned":0,"candidates":0,"findings_added":0,"dropped":0,"elapsed_ms":0,"note":"skipped — has_llm_or_agent_code=false"}
+{"phase":"TRIAGE","files_scanned":0,"candidates":8,"findings_added":0,"dropped":0,"elapsed_ms":60000,"note":"all 8 findings re-validated against schema; finding_ids hashed and confirmed unique"}
+{"phase":"ADVERSARIAL","files_scanned":0,"candidates":8,"findings_added":0,"dropped":2,"elapsed_ms":300000,"note":"all 8 findings survived; 2 additional candidates killed (ed25519_zero_pubkey, lua_sandbox)"}
+{"phase":"EXPLOIT","files_scanned":0,"candidates":8,"findings_added":0,"dropped":0,"elapsed_ms":0,"note":"skipped — no SITL runtime on Windows host; all findings remain plausible"}
