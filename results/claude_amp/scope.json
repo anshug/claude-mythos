@@ -1,0 +1,50 @@
+{
+  "target": "ArduPilot Plane 4.6.3",
+  "target_path": "C:/Amp_demos/rdupilot/ardupilot",
+  "language_breakdown": {"cpp": 0.78, "c": 0.07, "python": 0.10, "yaml": 0.03, "lua": 0.02},
+  "entry_points": [
+    {"kind":"network",  "file":"libraries/AP_DDS/AP_DDS_UDP.cpp", "line":17, "protocol":"udp/2019", "note":"XRCE-DDS UDP transport (DDS_UDP_PORT default 2019), reaches on_topic/on_request handlers"},
+    {"kind":"network",  "file":"libraries/AP_DDS/AP_DDS_Client.cpp", "line":911, "protocol":"udp/2019", "note":"on_request dispatcher: ARM/MODE/TAKEOFF/SET_PARAMETERS over DDS — no auth"},
+    {"kind":"network",  "file":"libraries/AP_DDS/AP_DDS_Client.cpp", "line":817, "protocol":"udp/2019", "note":"on_topic dispatcher: Joy RC override + dynamic_transforms + velocity/global control over DDS — no auth"},
+    {"kind":"network",  "file":"libraries/GCS_MAVLink/GCS_FTP.cpp", "line":61, "protocol":"mavlink/all-transports", "note":"MAVFTP open/read/write/delete/rename/mkdir on full filesystem"},
+    {"kind":"network",  "file":"libraries/GCS_MAVLink/GCS_Signing.cpp", "line":116, "protocol":"mavlink", "note":"accept_unsigned_callback: COMM_0 always accepts unsigned; RADIO/RADIO_STATUS always accepted on all channels"},
+    {"kind":"network",  "file":"libraries/AP_CheckFirmware/AP_CheckFirmware_secure_command.cpp", "line":270, "protocol":"mavlink/SECURE_COMMAND", "note":"Bootloader pubkey management via mavlink with sig check that fail-opens on all-zero keys"},
+    {"kind":"file_parser","file":"libraries/AP_Scripting/AP_Scripting.cpp", "line":0, "format":"lua", "note":"Lua scripts auto-loaded from SD card / @ROMFS"},
+    {"kind":"file_parser","file":"libraries/AP_Filesystem/AP_Filesystem.cpp", "line":0, "format":"filesystem", "note":"AP_Filesystem prefix-routing: @SYS/, @PARAM/, @MISSION/, @ROMFS/ — invoked by MAVFTP using attacker-controlled path"},
+    {"kind":"ci_trigger","file":".github/workflows/cache_cleanup.yml", "line":0, "event":"pull_request_target?", "note":"check below"},
+    {"kind":"ipc",       "file":"libraries/AP_Networking/AP_Networking.cpp", "line":0, "transport":"tcp/serial-passthrough", "note":"Network passthrough"}
+  ],
+  "trust_boundaries": [
+    "mavlink_channel (over any UART/UDP/TCP)",
+    "DDS_UDP_listener (port 2019)",
+    "lua_script_dir (SD card / ROMFS)",
+    "filesystem virtual prefixes (@SYS/@PARAM/@MISSION/@ROMFS)",
+    "bootloader_signed_command (SECURE_COMMAND MAVLink)",
+    "github_actions_pull_request"
+  ],
+  "ranked_files": [
+    {"path":"libraries/AP_DDS/AP_DDS_Client.cpp","score":5,"reason":"UDP listener at 2019 dispatches arm/mode/takeoff/setparam/joy with no auth"},
+    {"path":"libraries/GCS_MAVLink/GCS_FTP.cpp","score":5,"reason":"untrusted MAVLink bytes -> AP_Filesystem open/write/delete; no auth on path"},
+    {"path":"libraries/GCS_MAVLink/GCS_Signing.cpp","score":5,"reason":"accept_unsigned_callback fail-open on COMM_0; allows RADIO* unsigned everywhere"},
+    {"path":"libraries/AP_CheckFirmware/AP_CheckFirmware.cpp","score":5,"reason":"all_zero_public_keys() returns true -> CHECK_FW_OK (signature bypass)"},
+    {"path":"libraries/AP_CheckFirmware/AP_CheckFirmware_secure_command.cpp","score":5,"reason":"check_signature returns true when keys all-zero — fail-open"},
+    {"path":"libraries/AP_Filesystem/AP_Filesystem_Sys.cpp","score":4,"reason":"@SYS virtual files exposed over FTP"},
+    {"path":"libraries/AP_Scripting/AP_Scripting.cpp","score":4,"reason":"Lua autoload, sandboxed but untrusted-on-disk if MAVFTP writes scripts"},
+    {"path":"libraries/AP_DDS/AP_DDS_UDP.cpp","score":4,"reason":"UDP transport setup"},
+    {"path":".github/workflows/*","score":3,"reason":"CI workflows — check for pull_request_target"}
+  ],
+  "has_llm_or_agent_code": false,
+  "runtime_available": false,
+  "out_of_scope": [
+    "modules/**/test/**",
+    "modules/**/tests/**",
+    "third_party/**",
+    "Tools/autotest/test/**",
+    "libraries/**/tests/**",
+    "libraries/**/examples/**"
+  ],
+  "notes": [
+    "SITL runtime not available on Windows host. All findings capped at plausible.",
+    "Counting strategy: focus on (a) network-reachable handlers without auth, (b) crypto fail-open paths, (c) FTP path-traversal/filesystem exposure, (d) CI supply-chain."
+  ]
+}
